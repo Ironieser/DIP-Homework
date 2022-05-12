@@ -1,0 +1,31 @@
+clear; close all; clc;
+img_path = 'images\fog.jpg';
+result='result\';
+img = imread(img_path);
+% img_rgb = rgb2mat(img);
+subplot(1,4,1);
+imshow(img);title('original img');   
+
+Irggb=RGGB(img);
+subplot(1,4,2);
+imshow(Irggb,[0 1]);title(['Processed Image:RGGB bayer filter']);
+
+M=stretchlim(Irggb);
+
+defog = histeq(Irggb);
+subplot(1,4,4);imshow(defog,[0 1]);title(['final']);
+function[Ibayer] = RGGB(Irgb)
+ 
+    Irgb = double(Irgb)/255;
+     
+    Ibayer = zeros(size(Irgb,1),size(Irgb,2));
+     
+    Ibayer(1:2:end,1:2:end) = Irgb(1:2:end,1:2:end,1); % copy red(R)
+     
+    Ibayer(1:2:end,2:2:end) = Irgb(1:2:end,2:2:end,2); % copy green(G)
+     
+    Ibayer(2:2:end,1:2:end) = Irgb(2:2:end,1:2:end,2); % copy green(G)
+     
+    Ibayer(2:2:end,2:2:end) = Irgb(2:2:end,2:2:end,3); % copy blue(B)
+    return
+end
